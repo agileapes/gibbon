@@ -15,86 +15,8 @@ import java.util.*;
  */
 public class DefaultCommandMatcher implements CommandMatcher {
 
-    private static final Map<Character, Character> pairs = new HashMap<Character, Character>();
-
-    static {
-        pairs.put('\'', '\'');
-        pairs.put('"', '"');
-        pairs.put('`', '`');
-        pairs.put('(', ')');
-        pairs.put('[', ']');
-        pairs.put('{', '}');
-    }
-
-    private List<String> tokenize(String text) throws MissingTokenException {
-        final List<String> tokens = new ArrayList<String>();
-        int i = 0;
-        int marker = 0;
-        while (i < text.length()) {
-            if (Character.isWhitespace(text.charAt(i))) {
-                if (marker < i) {
-                    final String token = text.substring(marker, i).trim();
-                    if (!token.isEmpty()) {
-                        tokens.add(token);
-                    }
-                }
-                i++;
-                marker = i;
-                continue;
-            } else if ("+-=<>?!~@#$%^&*|\\/".contains(String.valueOf(text.charAt(i)))) {
-                if (marker < i) {
-                    final String token = text.substring(marker, i).trim();
-                    if (!token.isEmpty()) {
-                        tokens.add(token);
-                    }
-                }
-                tokens.add(String.valueOf(text.charAt(i)));
-                i ++;
-                marker = i;
-            } else if (pairs.containsKey(text.charAt(i))) {
-                if (marker < i) {
-                    final String token = text.substring(marker, i).trim();
-                    if (!token.isEmpty()) {
-                        tokens.add(token);
-                    }
-                }
-                String ending = String.valueOf(pairs.get(text.charAt(i)));
-                i ++;
-                String token = "";
-                while (true) {
-                    if (i >= text.length()) {
-                        throw new MissingTokenException(ending, i, text);
-                    }
-                    token += text.charAt(i);
-                    i ++;
-                    if (token.endsWith(ending) && !token.endsWith("\\" + ending)) {
-                        break;
-                    }
-                }
-                token = token.substring(0, token.length() - 1);
-                for (Character character : pairs.keySet()) {
-                    token = token.replace("\\" + character, character.toString());
-                }
-                for (Character character : pairs.values()) {
-                    token = token.replace("\\" + character, character.toString());
-                }
-                tokens.add(token);
-                marker = i;
-            }
-            i++;
-        }
-        if (marker < text.length()) {
-            final String token = text.substring(marker, text.length()).trim();
-            if (!token.isEmpty()) {
-                tokens.add(token);
-            }
-        }
-        return tokens;
-    }
-
     @Override
-    public Value[] match(Section[] sections, String text) throws CommandSyntaxException {
-        final List<String> tokens = tokenize(text);
+    public Value[] match(Section[] sections, List<String> tokens) throws CommandSyntaxException {
         final List<String> values = new ArrayList<String>();
         for (Section section : sections) {
             int matches = matches(section, tokens);
