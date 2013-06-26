@@ -1,4 +1,4 @@
-package com.agileapes.gibbon;
+package com.agileapes.gibbon.command;
 
 /**
  * @author Mohammad Milad Naseri (m.m.naseri@gmail.com)
@@ -12,4 +12,7 @@ public interface Command {
 
     String getSyntax();
 
+    void execute(Object ... arguments) throws Exception;
+
+    Class[] getArguments();
 }
