@@ -13,18 +13,13 @@
  * or substantial portions of the Software.
  */
 
-package com.agileapes.gibbon.namespace;
-
-import com.agileapes.gibbon.command.Command;
-
-import java.util.Set;
+package com.agileapes.gibbon.error;
 
 /**
  * @author Mohammad Milad Naseri (m.m.naseri@gmail.com)
- * @since 1.0 (2013/6/26, 19:42)
+ * @since 1.0 (6/27/13, 12:01 PM)
  */
-public interface ExtensionLoader {
-
-    Set<Command> getCommands();
-
+public class NoSuchExtensionException extends Exception {
+    public NoSuchExtensionException(String extension) {
+    }
 }

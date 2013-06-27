@@ -13,7 +13,7 @@
  * or substantial portions of the Software.
  */
 
-package com.agileapes.gibbon.namespace;
+package com.agileapes.gibbon.extension;
 
 /**
  * @author Mohammad Milad Naseri (m.m.naseri@gmail.com)

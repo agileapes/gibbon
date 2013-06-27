@@ -15,8 +15,8 @@
 
 package com.agileapes.gibbon.value.impl;
 
-import com.agileapes.gibbon.value.ValueReader;
 import com.agileapes.gibbon.util.ClassUtils;
+import com.agileapes.gibbon.value.ValueReader;
 
 /**
  * This value reader will take as input the fully qualified name of a class within the classpath

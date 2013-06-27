@@ -18,6 +18,7 @@ package com.agileapes.gibbon.command;
 import com.agileapes.gibbon.command.impl.DefaultCommandMatcher;
 import com.agileapes.gibbon.command.impl.DefaultCommandParser;
 import com.agileapes.gibbon.command.impl.DefaultCommandTokenizer;
+import com.agileapes.gibbon.command.impl.MatchedValue;
 import com.agileapes.gibbon.command.section.Section;
 import com.agileapes.gibbon.error.CommandSyntaxException;
 import org.testng.Assert;
@@ -33,7 +34,7 @@ public class CommandMatcherTest {
 
     private final CommandTokenizer tokenizer = new DefaultCommandTokenizer();
 
-    private List<String> tokenize(String text) {
+    private List<String> tokenize(String text) throws CommandSyntaxException {
         return tokenizer.tokenize(text);
     }
 
@@ -100,4 +101,18 @@ public class CommandMatcherTest {
         Assert.assertEquals(values[0].getText(), "this is gibbon's test");
         Assert.assertEquals(values[1].getText(), "123 456 789");
     }
+
+    @Test
+    public void testMatchingIncompleteCommand() throws Exception {
+        final Section[] sections = parse("copy # [to #] from #");
+        CommandMatcher matcher = new DefaultCommandMatcher();
+        Value[] values = matcher.match(sections, tokenize("copy 'this is gibbon\\'s test'"));
+        Assert.assertNotNull(values);
+        Assert.assertEquals(values.length, 1);
+        Assert.assertNull(values[0].getText());
+        Assert.assertTrue(values[0] instanceof MatchedValue);
+        Assert.assertEquals(((MatchedValue) values[0]).getSize(), 2);
+        Assert.assertEquals(((MatchedValue) values[0]).getNext(), "from");
+    }
+
 }

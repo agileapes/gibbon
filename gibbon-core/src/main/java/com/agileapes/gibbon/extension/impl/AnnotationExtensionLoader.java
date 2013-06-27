@@ -13,13 +13,13 @@
  * or substantial portions of the Software.
  */
 
-package com.agileapes.gibbon.namespace.impl;
+package com.agileapes.gibbon.extension.impl;
 
 import com.agileapes.gibbon.api.Namespace;
 import com.agileapes.gibbon.command.Command;
 import com.agileapes.gibbon.command.impl.MethodDelegateCommand;
 import com.agileapes.gibbon.contract.Callback;
-import com.agileapes.gibbon.namespace.ExtensionLoader;
+import com.agileapes.gibbon.extension.ExtensionLoader;
 import com.agileapes.gibbon.util.CollectionDSL;
 import com.agileapes.gibbon.util.MethodAnnotationFilter;
 
@@ -34,10 +34,11 @@ import java.util.Set;
 public class AnnotationExtensionLoader implements ExtensionLoader {
 
     private final Set<Command> commands;
+    private final String namespace;
 
     public AnnotationExtensionLoader(Class<?> target) {
         commands = new HashSet<Command>();
-        final String namespace = target.isAnnotationPresent(Namespace.class) ? target.getAnnotation(Namespace.class).value() : target.getSimpleName();
+        namespace = target.isAnnotationPresent(Namespace.class) ? target.getAnnotation(Namespace.class).value() : target.getSimpleName();
         CollectionDSL.with(target.getDeclaredMethods())
                 .filter(new MethodAnnotationFilter(com.agileapes.gibbon.api.Command.class))
                 .each(new Callback<Method>() {
@@ -51,6 +52,11 @@ public class AnnotationExtensionLoader implements ExtensionLoader {
     @Override
     public Set<Command> getCommands() {
         return commands;
+    }
+
+    @Override
+    public String getName() {
+        return namespace;
     }
 
 }

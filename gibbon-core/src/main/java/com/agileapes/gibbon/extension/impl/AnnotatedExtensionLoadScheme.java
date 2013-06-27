@@ -13,12 +13,12 @@
  * or substantial portions of the Software.
  */
 
-package com.agileapes.gibbon.namespace.impl;
+package com.agileapes.gibbon.extension.impl;
 
 import com.agileapes.gibbon.api.Command;
 import com.agileapes.gibbon.api.Namespace;
-import com.agileapes.gibbon.namespace.ExtensionLoadScheme;
-import com.agileapes.gibbon.namespace.ExtensionLoader;
+import com.agileapes.gibbon.extension.ExtensionLoadScheme;
+import com.agileapes.gibbon.extension.ExtensionLoader;
 import com.agileapes.gibbon.util.CollectionDSL;
 import com.agileapes.gibbon.util.MethodAnnotationFilter;
 

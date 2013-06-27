@@ -13,35 +13,30 @@
  * or substantial portions of the Software.
  */
 
-package com.agileapes.gibbon.sample;
+package com.agileapes.gibbon.command.impl;
 
-import com.agileapes.gibbon.api.Command;
-import com.agileapes.gibbon.api.Namespace;
+import com.agileapes.gibbon.command.Value;
 
 /**
  * @author Mohammad Milad Naseri (m.m.naseri@gmail.com)
- * @since 1.0 (2013/6/26, 19:16)
+ * @since 1.0 (6/27/13, 12:39 PM)
  */
-@Namespace("sample")
-public class SampleNamespace {
+public class MatchedValue extends Value {
 
-    @Command("say hi [to #]")
-    public void hi(String name) {
-        if (name == null) {
-            System.err.println("Hello world!");
-        } else {
-            System.err.println("Hello, " + name + "!");
-        }
+    private final int size;
+    private final String next;
+
+    public MatchedValue(int size, String next) {
+        super(null);
+        this.size = size;
+        this.next = next;
     }
 
-    @Command("count [from #] to #")
-    public void count(Integer from, Integer to) {
-        if (from == null) {
-            from = to > 0 ? 0 : to;
-        }
-        while (to >= from) {
-            System.err.println(from ++);
-        }
+    public int getSize() {
+        return size;
     }
 
+    public String getNext() {
+        return next;
+    }
 }

@@ -20,9 +20,11 @@ import com.agileapes.gibbon.command.Value;
 import com.agileapes.gibbon.command.section.Section;
 import com.agileapes.gibbon.command.section.impl.MandatorySection;
 import com.agileapes.gibbon.error.CommandSyntaxException;
-import com.agileapes.gibbon.error.MissingTokenException;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author Mohammad Milad Naseri (m.m.naseri@gmail.com)
@@ -33,24 +35,43 @@ public class DefaultCommandMatcher implements CommandMatcher {
     @Override
     public Value[] match(Section[] sections, List<String> tokens) throws CommandSyntaxException {
         final List<String> values = new ArrayList<String>();
-        for (Section section : sections) {
+        int matched = 0;
+        final Map<Integer, Integer> matchedSections = new HashMap<Integer, Integer>();
+        for (int index = 0; index < sections.length; index++) {
+            Section section = sections[index];
             int matches = matches(section, tokens);
+            matchedSections.put(index, matches);
             if (matches > tokens.size()) {
                 throw new IllegalStateException();
             }
-            if (matches > 0) {
-                for (int i = 0; i < section.getTokens().size(); i ++) {
+            if (matches == section.getTokens().size()) {
+                for (int i = 0; i < section.getTokens().size(); i++) {
                     if (section.getTokens().get(i).equals("#")) {
                         values.add(tokens.get(i));
                     }
                 }
-                while (matches -- > 0) {
+                while (matches-- > 0) {
+                    matched++;
                     tokens.remove(0);
                 }
             } else if (section instanceof MandatorySection) {
+                while (matches-- > 0) {
+                    matched++;
+                    tokens.remove(0);
+                }
+                if (tokens.isEmpty()) {
+                    return new Value[]{new MatchedValue(matched, section.getTokens().get(matchedSections.get(index)))};
+                } else {
+                    while (index > 0 && sections[-- index] instanceof OptionalSection) {
+                        if (matchedSections.get(index) == 0) {
+                            continue;
+                        }
+                        return new Value[]{new MatchedValue(matched, sections[index].getTokens().get(matchedSections.get(index)))};
+                    }
+                }
                 return null;
             } else {
-                for (int i = 0; i < section.getTokens().size(); i ++) {
+                for (int i = 0; i < section.getTokens().size(); i++) {
                     if (section.getTokens().get(i).equals("#")) {
                         values.add(null);
                     }
@@ -58,6 +79,13 @@ public class DefaultCommandMatcher implements CommandMatcher {
             }
         }
         if (!tokens.isEmpty()) {
+            int index = sections.length;
+            while (index > 0 && sections[-- index] instanceof OptionalSection) {
+                if (matchedSections.get(index) == 0) {
+                    continue;
+                }
+                return new Value[]{new MatchedValue(matched, sections[index].getTokens().get(matchedSections.get(index)))};
+            }
             return null;
         }
         final Value[] result = new Value[values.size()];
@@ -68,14 +96,11 @@ public class DefaultCommandMatcher implements CommandMatcher {
     }
 
     private int matches(Section section, List<String> tokens) {
-        if (tokens.size() < section.getTokens().size()) {
-            return 0;
-        }
         int i;
-        for (i = 0; i < section.getTokens().size(); i++) {
+        for (i = 0; i < Math.min(section.getTokens().size(), tokens.size()); i++) {
             String token = section.getTokens().get(i);
             if (!token.equals("#") && !token.equals(tokens.get(i))) {
-                return 0;
+                break;
             }
         }
         return i;

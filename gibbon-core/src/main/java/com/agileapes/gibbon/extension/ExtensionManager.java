@@ -13,15 +13,14 @@
  * or substantial portions of the Software.
  */
 
-package com.agileapes.gibbon.namespace;
+package com.agileapes.gibbon.extension;
 
 import com.agileapes.gibbon.command.CommandMatcherAware;
 import com.agileapes.gibbon.command.CommandParserAware;
-import com.agileapes.gibbon.error.CommandSyntaxException;
-import com.agileapes.gibbon.error.ExtensionAlreadyLoadedException;
-import com.agileapes.gibbon.error.ExtensionNotLoadedException;
-import com.agileapes.gibbon.error.UnsupportedExtensionException;
+import com.agileapes.gibbon.error.*;
 import com.agileapes.gibbon.value.ValueReaderAware;
+
+import java.util.Set;
 
 /**
  * @author Mohammad Milad Naseri (m.m.naseri@gmail.com)
@@ -31,12 +30,16 @@ public interface ExtensionManager extends ValueReaderAware, CommandMatcherAware,
 
     void addScheme(ExtensionLoadScheme scheme);
 
-    void addExtension(Object extension) throws UnsupportedExtensionException, CommandSyntaxException;
+    void addExtension(Object extension) throws UnsupportedExtensionException, CommandSyntaxException, DuplicateExtensionException;
 
-    void load(String name) throws ExtensionAlreadyLoadedException;
+    void load(String name) throws ExtensionAlreadyLoadedException, NoSuchExtensionException;
 
-    void unload(String name) throws ExtensionNotLoadedException;
+    void unload(String name) throws ExtensionNotLoadedException, NoSuchExtensionException;
 
     void execute(String command) throws Exception;
+
+    Set<String> getExtensions();
+
+    boolean isLoaded(String extension) throws NoSuchExtensionException;
 
 }

@@ -13,11 +13,11 @@
  * or substantial portions of the Software.
  */
 
-package com.agileapes.gibbon.namespace;
+package com.agileapes.gibbon.extension;
 
 import com.agileapes.gibbon.command.Command;
 import com.agileapes.gibbon.contract.Callback;
-import com.agileapes.gibbon.namespace.impl.AnnotationExtensionLoader;
+import com.agileapes.gibbon.extension.impl.AnnotationExtensionLoader;
 import com.agileapes.gibbon.sample.SampleNamespace;
 import com.agileapes.gibbon.util.CollectionDSL;
 import org.testng.Assert;

@@ -57,7 +57,7 @@ public class DefaultCommandTokenizer implements CommandTokenizer {
                 i++;
                 marker = i;
                 continue;
-            } else if ("+-=<>?!~@#$%^&*|\\/".contains(String.valueOf(text.charAt(i)))) {
+            } else if ("=<>?!~@#$%^&*|\\/".contains(String.valueOf(text.charAt(i)))) {
                 if (marker < i) {
                     final String token = text.substring(marker, i).trim();
                     if (!token.isEmpty()) {

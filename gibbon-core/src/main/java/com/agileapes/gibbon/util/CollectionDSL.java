@@ -96,6 +96,10 @@ public abstract class CollectionDSL {
         public boolean isEmpty() {
             return count() == 0;
         }
+
+        public Wrapper<I> sort(Comparator<I> comparator) {
+            return new Wrapper<I>(sorted(items, comparator));
+        }
     }
 
     public static <I> Wrapper<I> with(I ... items) {

@@ -13,35 +13,19 @@
  * or substantial portions of the Software.
  */
 
-package com.agileapes.gibbon.sample;
+package com.agileapes.gibbon.extension;
 
-import com.agileapes.gibbon.api.Command;
-import com.agileapes.gibbon.api.Namespace;
+import com.agileapes.gibbon.command.Command;
+
+import java.util.Set;
 
 /**
  * @author Mohammad Milad Naseri (m.m.naseri@gmail.com)
- * @since 1.0 (2013/6/26, 19:16)
+ * @since 1.0 (2013/6/26, 19:42)
  */
-@Namespace("sample")
-public class SampleNamespace {
+public interface ExtensionLoader {
 
-    @Command("say hi [to #]")
-    public void hi(String name) {
-        if (name == null) {
-            System.err.println("Hello world!");
-        } else {
-            System.err.println("Hello, " + name + "!");
-        }
-    }
+    Set<Command> getCommands();
 
-    @Command("count [from #] to #")
-    public void count(Integer from, Integer to) {
-        if (from == null) {
-            from = to > 0 ? 0 : to;
-        }
-        while (to >= from) {
-            System.err.println(from ++);
-        }
-    }
-
+    String getName();
 }
